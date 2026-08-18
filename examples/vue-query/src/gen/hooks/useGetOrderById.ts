@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from '@kubb/plugin-client/clients/axios'
 import fetch from '@kubb/plugin-client/clients/axios'
-import type { QueryClient, QueryKey, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
+import type { DataTag, QueryClient, QueryKey, UndefinedInitialQueryOptions, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
 import { queryOptions, useQuery } from '@tanstack/vue-query'
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
@@ -35,7 +35,12 @@ export async function getOrderById({ orderId }: { orderId: GetOrderByIdPathParam
 export function getOrderByIdQueryOptions(
   { orderId }: { orderId: MaybeRefOrGetter<GetOrderByIdPathParams['orderId'] | undefined> },
   config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+): UndefinedInitialQueryOptions<
+  GetOrderByIdQueryResponse,
+  ResponseErrorConfig<GetOrderById400 | GetOrderById404>,
+  GetOrderByIdQueryResponse,
+  GetOrderByIdQueryKey
+> & { queryKey: DataTag<GetOrderByIdQueryKey, GetOrderByIdQueryResponse, ResponseErrorConfig<GetOrderById400 | GetOrderById404>> } {
   const queryKey = getOrderByIdQueryKey({ orderId })
   return queryOptions<GetOrderByIdQueryResponse, ResponseErrorConfig<GetOrderById400 | GetOrderById404>, GetOrderByIdQueryResponse, typeof queryKey>({
     enabled: () => !!toValue(orderId),

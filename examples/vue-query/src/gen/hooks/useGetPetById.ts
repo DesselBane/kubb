@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from '@kubb/plugin-client/clients/axios'
 import fetch from '@kubb/plugin-client/clients/axios'
-import type { QueryClient, QueryKey, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
+import type { DataTag, QueryClient, QueryKey, UndefinedInitialQueryOptions, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
 import { queryOptions, useQuery } from '@tanstack/vue-query'
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
@@ -35,7 +35,9 @@ export async function getPetById({ petId }: { petId: GetPetByIdPathParams['petId
 export function getPetByIdQueryOptions(
   { petId }: { petId: MaybeRefOrGetter<GetPetByIdPathParams['petId'] | undefined> },
   config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+): UndefinedInitialQueryOptions<GetPetByIdQueryResponse, ResponseErrorConfig<GetPetById400 | GetPetById404>, GetPetByIdQueryResponse, GetPetByIdQueryKey> & {
+  queryKey: DataTag<GetPetByIdQueryKey, GetPetByIdQueryResponse, ResponseErrorConfig<GetPetById400 | GetPetById404>>
+} {
   const queryKey = getPetByIdQueryKey({ petId })
   return queryOptions<GetPetByIdQueryResponse, ResponseErrorConfig<GetPetById400 | GetPetById404>, GetPetByIdQueryResponse, typeof queryKey>({
     enabled: () => !!toValue(petId),

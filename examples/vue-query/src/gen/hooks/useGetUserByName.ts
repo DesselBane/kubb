@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from '@kubb/plugin-client/clients/axios'
 import fetch from '@kubb/plugin-client/clients/axios'
-import type { QueryClient, QueryKey, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
+import type { DataTag, QueryClient, QueryKey, UndefinedInitialQueryOptions, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
 import { queryOptions, useQuery } from '@tanstack/vue-query'
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
@@ -37,7 +37,12 @@ export async function getUserByName(
 export function getUserByNameQueryOptions(
   { username }: { username: MaybeRefOrGetter<GetUserByNamePathParams['username'] | undefined> },
   config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+): UndefinedInitialQueryOptions<
+  GetUserByNameQueryResponse,
+  ResponseErrorConfig<GetUserByName400 | GetUserByName404>,
+  GetUserByNameQueryResponse,
+  GetUserByNameQueryKey
+> & { queryKey: DataTag<GetUserByNameQueryKey, GetUserByNameQueryResponse, ResponseErrorConfig<GetUserByName400 | GetUserByName404>> } {
   const queryKey = getUserByNameQueryKey({ username })
   return queryOptions<GetUserByNameQueryResponse, ResponseErrorConfig<GetUserByName400 | GetUserByName404>, GetUserByNameQueryResponse, typeof queryKey>({
     enabled: () => !!toValue(username),

@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from '@kubb/plugin-client/clients/axios'
 import fetch from '@kubb/plugin-client/clients/axios'
-import type { QueryClient, QueryKey, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
+import type { DataTag, QueryClient, QueryKey, UndefinedInitialQueryOptions, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
 import { queryOptions, useQuery } from '@tanstack/vue-query'
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
@@ -26,7 +26,12 @@ export async function loginUser(params?: LoginUserQueryParams, config: Partial<R
   return res.data
 }
 
-export function loginUserQueryOptions(params?: MaybeRefOrGetter<LoginUserQueryParams>, config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function loginUserQueryOptions(
+  params?: MaybeRefOrGetter<LoginUserQueryParams>,
+  config: Partial<RequestConfig> & { client?: Client } = {},
+): UndefinedInitialQueryOptions<LoginUserQueryResponse, ResponseErrorConfig<LoginUser400>, LoginUserQueryResponse, LoginUserQueryKey> & {
+  queryKey: DataTag<LoginUserQueryKey, LoginUserQueryResponse, ResponseErrorConfig<LoginUser400>>
+} {
   const queryKey = loginUserQueryKey(params)
   return queryOptions<LoginUserQueryResponse, ResponseErrorConfig<LoginUser400>, LoginUserQueryResponse, typeof queryKey>({
     queryKey,
