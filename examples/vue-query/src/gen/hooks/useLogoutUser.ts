@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from '@kubb/plugin-client/clients/axios'
 import fetch from '@kubb/plugin-client/clients/axios'
-import type { QueryClient, QueryKey, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
+import type { DataTag, QueryClient, QueryKey, UndefinedInitialQueryOptions, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
 import { queryOptions, useQuery } from '@tanstack/vue-query'
 import { toValue } from 'vue'
 import type { LogoutUserQueryResponse } from '../models/LogoutUser.ts'
@@ -25,7 +25,14 @@ export async function logoutUser(config: Partial<RequestConfig> & { client?: Cli
   return res.data
 }
 
-export function logoutUserQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}) {
+export function logoutUserQueryOptions(config: Partial<RequestConfig> & { client?: Client } = {}): UndefinedInitialQueryOptions<
+  LogoutUserQueryResponse,
+  ResponseErrorConfig<Error>,
+  LogoutUserQueryResponse,
+  LogoutUserQueryKey
+> & {
+  queryKey: DataTag<LogoutUserQueryKey, LogoutUserQueryResponse, ResponseErrorConfig<Error>>
+} {
   const queryKey = logoutUserQueryKey()
   return queryOptions<LogoutUserQueryResponse, ResponseErrorConfig<Error>, LogoutUserQueryResponse, typeof queryKey>({
     queryKey,

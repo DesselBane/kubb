@@ -5,7 +5,7 @@
 
 import type { Client, RequestConfig, ResponseErrorConfig } from '@kubb/plugin-client/clients/axios'
 import fetch from '@kubb/plugin-client/clients/axios'
-import type { QueryClient, QueryKey, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
+import type { DataTag, QueryClient, QueryKey, UndefinedInitialQueryOptions, UseQueryOptions, UseQueryReturnType } from '@tanstack/vue-query'
 import { queryOptions, useQuery } from '@tanstack/vue-query'
 import type { MaybeRefOrGetter } from 'vue'
 import { toValue } from 'vue'
@@ -36,7 +36,12 @@ export async function findPetsByStatus(params?: FindPetsByStatusQueryParams, con
 export function findPetsByStatusQueryOptions(
   params?: MaybeRefOrGetter<FindPetsByStatusQueryParams>,
   config: Partial<RequestConfig> & { client?: Client } = {},
-) {
+): UndefinedInitialQueryOptions<
+  FindPetsByStatusQueryResponse,
+  ResponseErrorConfig<FindPetsByStatus400>,
+  FindPetsByStatusQueryResponse,
+  FindPetsByStatusQueryKey
+> & { queryKey: DataTag<FindPetsByStatusQueryKey, FindPetsByStatusQueryResponse, ResponseErrorConfig<FindPetsByStatus400>> } {
   const queryKey = findPetsByStatusQueryKey(params)
   return queryOptions<FindPetsByStatusQueryResponse, ResponseErrorConfig<FindPetsByStatus400>, FindPetsByStatusQueryResponse, typeof queryKey>({
     queryKey,
